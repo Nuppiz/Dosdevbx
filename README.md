@@ -17,3 +17,5 @@ Table of contents:
 * Text.c/h - text drawing functions while in graphics mode
 * Timer.c/h - Intel 8253-based timer reprogramming functions
 * Video.c/h - Various functions related to setting up and checking the video display mode
+
+Make sure to check https://github.com/Nuppiz/8bitconv if you need to convert 8-bit bitmaps into byte arrays that you can easily make code for.
