@@ -1,5 +1,5 @@
 Table of contents:
-Borwat.h - header file to convert certain Borland-specific standard function calls to Open Watcom
+Borwat.h - header file to convert certain Borland-specific standard function calls to Open Watcom\n
 CGAEGA.ASM - Everett Kaser's CGA and EGA routines from 1987 written in x86 assembly, modified by me for clarity and compatibility
 Common.h - standard libraries needed for the various functions, plus some custom headers for basic defines and structs
 Defines.h - custom defines and macros, mainly to make hardware calls more understandable
