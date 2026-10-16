@@ -55,7 +55,7 @@ void handleMouseInput()
     }
     else if (mouse_rb)
     {
-      // do another thing if left button is clicked
+      // do another thing if right button is clicked
     }
     // update mouse location
     // mouse_location.x = mouse_x;

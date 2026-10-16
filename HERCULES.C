@@ -196,7 +196,8 @@ void HGCTextMode() // formerly called just text()
   int86(0x10, &regs, &regs);
   outportb(0x3bf, 0);
   outportb(0x3b8, 0x28);
-  for (i=0; i<18; i++) {
+  for (i=0; i<18; i++)
+  {
     outportb(0x3b4, i);
     outportb(0x3b5, te6845[i]);
   }
@@ -227,15 +228,12 @@ void HGCDrawDot(x, y, color)	      /* color: 1-dot on;  0-dot off */		      /*	x
 
   index = byte_addr(x, y);
   bit_pos = bit_pos(x);
-  if (color == WHITE) {
+  if (color == WHITE)
     screen[index] |= bit_pos;
-  }
-  else if (color == BLACK) {
+  else if (color == BLACK)
     screen[index] &= ~bit_pos;
-  }
-  else if (color == XOR) {
+  else if (color == XOR)
     screen [index] ^= bit_pos;
-  }
 }
 
 /*****************************************************************************/
@@ -257,52 +255,57 @@ void HGCDrawLine(int xstart, int ystart, int xend, int yend, int color)
   y = ystart;
   a = xend - xstart;
   b = yend - ystart;
-  if (a < 0) {
+  if (a < 0)
+  {
     a = -1 * a;
     dx_diag = -1;
   }
-  else {
+  else
     dx_diag = 1;
-  }
-  if (b < 0) {
+  if (b < 0)
+  {
     b = -1 * b;
     dy_diag = -1;
   }
-  else {
+  else
     dy_diag = 1;
-  }
-  if (a < b) {
+  if (a < b)
+  {
     swap = a;
     a = b;
     b = swap;
     dx_nondiag = 0;
     dy_nondiag = dy_diag;
   }
-  else {
+  else
+  {
     dx_nondiag = dx_diag;
     dy_nondiag = 0;
   }
   d = b + b - a;
   nondiag_inc = b + b;
   diag_inc = b + b - a - a;
-  for (i = 0; i <= a; i++) {
+  for (i = 0; i <= a; i++)
+  {
     index = byte_addr(x, y);		/* This is an exact copy of the      */
     bit_pos = bit_pos(x);		    /* dot routine to subroutine calls   */
-    if (color == WHITE) {		    /* which actually speeds up the      */
-      screen[index] |= bit_pos; /* line routine 30%!!!		     */
+    if (color == WHITE)         /* which actually speeds up the      */
+    {		                        /* line routine 30%!!!		     */
+      screen[index] |= bit_pos;
     }
-    else if (color == BLACK) {
+    else if (color == BLACK)
       screen[index] &= ~bit_pos;
-    }
     else if (color == XOR) {
       screen [index] ^= bit_pos;
     }
-    if (d < 0) {
+    if (d < 0)
+    {
       x = x + dx_nondiag;
       y = y + dy_nondiag;
       d = d + nondiag_inc;
     }
-    else {
+    else
+    {
       x = x + dx_diag;
       y = y + dy_diag;
       d = d + diag_inc;
@@ -331,24 +334,31 @@ void HGCDrawLineAlt(int x1, int y1, int x2, int y2, int color)
   dys = ((dy >= 0) ? (1) : (-1));
   dx = dxs * dx;
   dy = dys * dy;
-  if (dx == 0) {
-    for (i= y1; ((dys==1) ? (i <= y2) : (i >= y2)); i += dys) {
+  if (dx == 0)
+  {
+    for (i= y1; ((dys==1) ? (i <= y2) : (i >= y2)); i += dys)
+    {
       HGCDrawDot(x1, i, color);
     }
   }
   else if (dy == 0) {
-    for (i = x1; ((dxs == 1) ? (i <= x2) : (i >= x2)); i += dxs) {
+    for (i = x1; ((dxs == 1) ? (i <= x2) : (i >= x2)); i += dxs)
+    {
       HGCDrawDot(i, y1, color);
     }
   }
   else {
-    if (dx >= dy) {
-      for (i= x1; ((dxs==1) ? (i <= x2) : (i >= x2)); i += dxs) {
+    if (dx >= dy)
+    {
+      for (i= x1; ((dxs==1) ? (i <= x2) : (i >= x2)); i += dxs)
+      {
 	      HGCDrawDot(i,((dys == 1) ? (y1 + (dxs * (i - x1) * dy) / dx) : (y1 - (dxs * (i-x1) *dy) /dx)), color);
       }
     }
-    else {
-      for (i = y1; ((dys == 1) ? (i <= y2) : (i >= y2)); i += dys) {
+    else
+    {
+      for (i = y1; ((dys == 1) ? (i <= y2) : (i >= y2)); i += dys)
+      {
 	      HGCDrawDot(((dxs == 1) ? (x1 + (dys * (i-y1) * dx) /dy) : (x1 - (dys * (i- y1) *dx) /dy)), i, color);
       }
     }
@@ -378,31 +388,36 @@ void HGCDrawShape(struct shape_type shape, int x, int y, int color)
 
   scr_index = byte_addr(x,y);
   shift_num = bit_num(x);
-  for (i = 0; i < shape.x; i++) {
+  for (i = 0; i < shape.x; i++)
+  {
     temp_index = scr_index;
-    for (j = 0; j < shape.y; j++) {
+    for (j = 0; j < shape.y; j++)
+    {
         a = shape.shape_array[shape.x - i - 1 + j * shape.x] & 0xff;
         temp = a >> shift_num;
-        if (color == OVERWRITE) {
+        if (color == OVERWRITE)
+        {
 	        screen[temp_index + shape.x - i] = (a^(temp << shift_num)) << (8 - shift_num);
 	        screen[temp_index + shape.x - i - 1] = temp;
         }
-        else if (color == WHITE) {
+        else if (color == WHITE)
+        {
 	        screen[temp_index+shape.x - i] |= (a^(temp << shift_num)) << (8 - shift_num);
 	        screen[temp_index+shape.x - i - 1] |= temp;
-      }
-      else if (color == BLACK) {
+        }
+        else if (color == BLACK)
+        {
 	        screen[temp_index+shape.x - i] &= ~((a^(temp << shift_num)) << (8 - shift_num));
 	        screen[temp_index+shape.x - i - 1] &= ~temp;
-      }
-      else if (color == XOR) {
-	      screen[temp_index + shape. x - i] ^= (a^(temp << shift_num)) << (8 - shift_num);
-	      screen[temp_index + shape.x- i - 1] ^= temp;
-      }
-      temp_index += 0x2000;
-      if (temp_index > 0x8000) {
-	      temp_index = temp_index - 0x8000 + 0x5a;
-      }
+        }
+        else if (color == XOR)
+        {
+	        screen[temp_index + shape. x - i] ^= (a^(temp << shift_num)) << (8 - shift_num);
+	        screen[temp_index + shape.x- i - 1] ^= temp;
+        }
+        temp_index += 0x2000;
+        if (temp_index > 0x8000)
+	        temp_index = temp_index - 0x8000 + 0x5a;
     }
   }
 }
@@ -428,31 +443,38 @@ void HGCDrawBlock(struct shape_type shape, int x, int y, int color)
   int scr_index;
 
   scr_index = byte_addr(x, y);
-  for (j = 0; j < shape.y; j++) {
-    switch (color) {
+  for (j = 0; j < shape.y; j++)
+  {
+    switch (color)
+    {
       case OVERWRITE:
-	memmove(&screen[scr_index], &shape.shape_array[j * shape.x], shape.x);
-	break;
+	      memmove(&screen[scr_index], &shape.shape_array[j * shape.x], shape.x);
+	      break;
+
       case WHITE:
-	for (i = 0; i < shape.x; i++) {
-	  screen[scr_index + i] |= shape.shape_array[j * shape.x + i];
-	}
-	break;
+	    for (i = 0; i < shape.x; i++)
+      {
+	      screen[scr_index + i] |= shape.shape_array[j * shape.x + i];
+	    }
+	    break;
+
       case BLACK:
-	for (i = 0; i < shape.x; i++) {
-	  screen[scr_index + i] &= ~(shape.shape_array[j * shape.x + i]);
-	}
-	break;
+	    for (i = 0; i < shape.x; i++)
+      {
+	      screen[scr_index + i] &= ~(shape.shape_array[j * shape.x + i]);
+	    }
+	    break;
+
       case XOR:
-	for (i = 0; i < shape.x; i++) {
-	  screen[scr_index + i] ^= shape.shape_array[j * shape.x + i];
-	}
-	break;
+	    for (i = 0; i < shape.x; i++)
+      {
+	      screen[scr_index + i] ^= shape.shape_array[j * shape.x + i];
+	    }
+	    break;
     }
     scr_index += 0x2000;
-    if (scr_index > 0x8000) {
+    if (scr_index > 0x8000)
       scr_index = scr_index - 0x8000 + 0x5a;
-    }
   }
 }
 
@@ -502,18 +524,19 @@ void HGCShiftRight(struct shape_type shape, int x, int y, int shift_num)
   int temp_index;
 
   scr_index = byte_addr(x, y);
-  for (i = 0; i<shape.x + 2; i++) {
+  for (i = 0; i<shape.x + 2; i++)
+  {
     temp_index = scr_index;
-    for (j = 0; j < shape.y; j++) {
+    for (j = 0; j < shape.y; j++)
+    {
       a = screen[temp_index + shape.x - i] & 0xff;
       b = screen[temp_index + shape.x - i + 1] & 0xff;
       temp = a >> shift_num;
       screen[temp_index + shape.x - i + 1] = b >> shift_num;
       screen[temp_index + shape.x-i + 1] |= (a^(temp << shift_num)) << (8 - shift_num);
       temp_index += 0x2000;
-      if (temp_index > 0x8000) {
+      if (temp_index > 0x8000)
 	      temp_index = temp_index - 0x8000 + 0x5a;
-      }
     }
   }
 }
@@ -541,24 +564,23 @@ void HGCShiftBlockUp(struct shape_type shape, int x, int y)
 
   old_index = byte_addr(x, y);
   scr_index = old_index - 2 * 0x5a;
-  for (i = 0; i < shape.y; i++) {
+  for (i = 0; i < shape.y; i++)
+  {
     memmove(screen + scr_index, screen + old_index, shape.x);
     old_index += 0x2000;
-    if (old_index > 0x8000) {
+    if (old_index > 0x8000)
       old_index = old_index - 0x8000 + 0x5a;
-    }
     scr_index += 0x2000;
-    if (scr_index > 0x8000) {
+    if (scr_index > 0x8000)
       scr_index = scr_index - 0x8000 + 0x5a;
-    }
   }
   scr_index = byte_addr(x, y + shape.y - 1);
-  for (i = 0; i < 8; i++) {
+  for (i = 0; i < 8; i++)
+  {
     memset(screen + scr_index, 0, shape.x);
     scr_index -= 0x2000;
-    if (scr_index < 0) {
+    if (scr_index < 0)
       scr_index = scr_index + 0x8000 - 0x5a;
-    }
   }
 }
 
@@ -571,24 +593,23 @@ void HGCShiftBlockDown(struct shape_type shape, int x, int y)
 
   old_index = byte_addr(x, y + shape.y - 1);
   scr_index = old_index + 2 * 0x5a;
-  for (i = 0; i < shape.y; i++) {
+  for (i = 0; i < shape.y; i++)
+  {
     memmove(screen + scr_index, screen + old_index, shape.x);
     old_index -= 0x2000;
-    if (old_index < 0) {
+    if (old_index < 0)
       old_index = old_index + 0x8000 - 0x5a;
-    }
     scr_index -= 0x2000;
-    if (scr_index < 0) {
+    if (scr_index < 0)
       scr_index = scr_index + 0x8000 - 0x5a;
-    }
   }
   scr_index = byte_addr(x, y);
-  for (i = 0; i < 8; i++) {
+  for (i = 0; i < 8; i++)
+  {
     memset(screen+scr_index,0,shape.x);
     scr_index += 0x2000;
-    if (scr_index > 0x8000) {
+    if (scr_index > 0x8000)
       scr_index = scr_index - 0x8000 + 0x5a;
-    }
   }
 }
 
@@ -599,13 +620,13 @@ void HGCShiftBlockLeft(struct shape_type shape, int x, int y)
   int scr_index;
 
   scr_index = byte_addr(x, y);
-  for (i = 0; i < shape.y; i++) {
+  for (i = 0; i < shape.y; i++)
+  {
     memmove(screen + scr_index - 1, screen + scr_index, shape.x);
     screen[scr_index + shape.x - 1] = 0;
     scr_index += 0x2000;
-    if (scr_index > 0x8000) {
+    if (scr_index > 0x8000)
       scr_index = scr_index - 0x8000 + 0x5a;
-    }
   }
 }
 
@@ -616,12 +637,12 @@ void HGCShiftBlockRight(struct shape_type shape, int x, int y)
   int scr_index;
 
   scr_index = byte_addr(x, y);
-  for (i = 0; i < shape.y; i++) {
+  for (i = 0; i < shape.y; i++)
+  {
     memmove(screen + scr_index + 1, screen + scr_index, shape.x);
     screen[scr_index] = 0;
     scr_index += 0x2000;
-    if (scr_index > 0x8000) {
+    if (scr_index > 0x8000)
       scr_index = scr_index - 0x8000 + 0x5a;
-    }
   }
 }
