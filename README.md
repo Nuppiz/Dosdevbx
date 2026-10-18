@@ -7,7 +7,7 @@ Table of contents:
 * Dosdevbx.wpj - Open Watcom 2.0 project file for compiling the test suite
 * Draw.c/h - drawing functions for various graphics modes
 * FONT.7UP - custom font to allow for clear text display while in graphics modes
-* HERCULES.C/H - Ben Bederson's Hercules Graphics Card routines from 1988, modified by me for clarity and compatibility
+* HERCULES.C/H - Ben Bederson's Hercules Graphics Card routines from 1988, modified by me for clarity and compatibility. Will also include Hercules InColor functions later
 * Keyb.c/h - AT-compatible keyboard driver
 * Keylist.c/h - support files for the keyboard driver to translate scancodes into human-readable button presses
 * Loadgfx.c/h - functions to load graphics from a file to memory
